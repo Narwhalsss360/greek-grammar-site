@@ -258,9 +258,8 @@ function generateVerbTable(verb) {
   return table;
 }
 
-const headerResizeObserver = new ResizeObserver(entry => {
-  if (entry[0].target.observerStyledMargin === undefined) {
-    const marginTopString = window.getComputedStyle(mainContent).marginTop;
+function getComputedMarginTop(node) {
+    const marginTopString = window.getComputedStyle(node).marginTop;
     if (!marginTopString) {
       marginTopString = "0px";
     }
@@ -269,10 +268,16 @@ const headerResizeObserver = new ResizeObserver(entry => {
       throw new Error("Currently, this observer only supports pixel margin values.");
     }
 
-    entry[0].target.observerStyledMargin = Number(marginTopString.slice(0, marginTopString.length - 2));
-  }
+    return Number(marginTopString.slice(0, marginTopString.length - 2));
+}
 
-  mainContent.style.marginTop = `${entry[0].target.observerStyledMargin + entry[0].contentRect.height}px`;
+const mainContentMarginTop = getComputedMarginTop(mainContent);
+const menuBarMarginTop = getComputedMarginTop(menuBar);
+const newBarMarginTop = getComputedMarginTop(newBar);
+const headerBarResizeObserver = new ResizeObserver(entry => {
+  mainContent.style.marginTop = `${mainContentMarginTop + entry[0].borderBoxSize[0].blockSize}px`;
+  menuBar.style.marginTop = `${menuBarMarginTop + entry[0].borderBoxSize[0].blockSize}px`;
+  newBar.style.marginTop = `${newBarMarginTop + entry[0].borderBoxSize[0].blockSize}px`;
 }).observe(header);
 
 function createVerbTable(group, stem) {
