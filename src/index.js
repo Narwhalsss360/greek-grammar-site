@@ -174,7 +174,7 @@ function withExceptions(verb, exceptions) {
   return verb
 }
 
-const verbs = [];
+const verbs = JSON.parse(localStorage.getItem("verbs") ?? "[]");
 
 function tableId(verb) {
   return `${verb.group}:${verb.stem}`;
@@ -227,12 +227,7 @@ function deleteTable(id) {
 }
 
 function generateVerbTable(verb) {
-  if (!persistVerb(verb)) {
-    return;
-  }
-
   if (document.getElementById(tableId(verb)) !== null) {
-    showError(`Table ${tableId(verb)} already exists!`);
     return null;
   }
 
@@ -294,9 +289,17 @@ const headerBarResizeObserver = new ResizeObserver(entry => {
 }).observe(header);
 
 function createVerbTable(group, stem) {
-  const table = generateVerbTable(generateVerb(group, stem))
+  const verb = generateVerb(group, stem);
+
+  if (!persistVerb(verb)) {
+    console.error(`Failed to persist verb ${tableId(verb)}`);
+  }
+  const table = generateVerbTable(verb);
+
   if (table !== null) {
     mainContent.appendChild(table);
+  } else {
+    showError(`Table ${tableId(verb)} already exists!`);
   }
 }
 
@@ -333,5 +336,25 @@ function closeErrorBox() {
   errorModal.style.display = "none";
 }
 
-createVerbTable("A1", "Κάν");
-createVerbTable("A1", "Βλέπ");
+function downloadText(filename, text, mimeType = "text/plain") {
+  var element = document.createElement('a');
+  element.setAttribute('href', `data:${mimeType};charset=utf-8,` + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+  element.style.display = 'none';
+
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}
+
+function exportVerbs() {
+  downloadText("verbs.json", JSON.stringify(verbs, null, 2), "application/json");
+}
+
+for (const verb of verbs) {
+  const table = generateVerbTable(verb);
+
+  if (table !== null) {
+    mainContent.appendChild(table);
+  }
+}
