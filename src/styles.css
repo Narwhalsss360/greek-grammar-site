@@ -20,6 +20,7 @@ body {
 header {
   background-color: var(--secondary-background-color);
   margin: 0px;
+  padding: 4px 0px 4px 0px;
   position: fixed;
   top: 0px;
   width: 100%;
@@ -45,6 +46,26 @@ button {
   background-color: var(--interactable-background-color);
   transition: background-color 0.2s;
   cursor: pointer;
+}
+
+select {
+  background-color: var(--interactable-background-color);
+  color: var(--main-foreground-color);
+  border-color: black;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+input {
+  background-color: var(--interactable-background-color);
+  color: var(--main-foreground-color);
+  border-color: black;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+input::placeholder {
+  color: var(--secondary-background-color);
 }
 
 button:hover {
@@ -96,4 +117,41 @@ th {
   flex-direction: column;
   max-width: 60%;
   margin: 5px auto 5px auto;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  max-width: 80%;
+  background-color: var(--secondary-background-color);
+}
+
+.right-side {
+  left: auto;
+  right: 0px;
+}
+
+.error-modal {
+  position: static;
+  top: 10%;
+  margin: 0px auto 0px auto;
+  border-color: red;
+  background-color: rgb(180, 0, 0);
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-width: 50%;
+  border-radius: 20px;
+}
+
+.error-modal button {
+  border-radius: 0px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }

@@ -1,5 +1,11 @@
 const header = document.querySelector("header");
 const mainContent = document.getElementById("main-content");
+const menuBar = document.getElementById("menu-bar");
+const newBar = document.getElementById("new-bar");
+const newVerbGroup = document.getElementById("new-verb-group");
+const newVerbStem = document.getElementById("new-verb-stem");
+const errorModal = document.getElementById("error-modal");
+const errorModalParagraph = document.getElementById("error-modal-p");
 
 const ENDINGS = {
   A1: {
@@ -124,6 +130,12 @@ const EXCEPTION_SCHEMA = {
     }
 }
 
+function showError(message) {
+  errorModalParagraph.innerHTML = message;
+  errorModal.style.display = "flex";
+  console.error(message);
+}
+
 function generateVerb(group, stem) {
   if (!(group in ENDINGS)) {
     throw new Error(`${group} is not a verb group`);
@@ -192,6 +204,7 @@ function forgetVerb(group, stem) {
 }
 
 function deleteTable(id) {
+  closeErrorBox();
   const separatorIndex = id.indexOf(":");
   if (separatorIndex === -1) {
     throw new Error("Invalid ID.");
@@ -201,12 +214,12 @@ function deleteTable(id) {
   const stem = id.substring(separatorIndex + 1);
 
   if (!forgetVerb(group, stem)) {
-    console.error(`Verb '${id}' was not persisted, but tried to forget.`);
+    showError(`Verb '${id}' was not persisted, but tried to forget.`);
   }
 
   const table = document.getElementById(id);
   if (table === null) {
-    console.error(`Verb '${id}' table does not exist, but tried to delete.`);
+    showError(`Verb '${id}' table does not exist, but tried to delete.`);
     return;
   }
 
@@ -219,7 +232,7 @@ function generateVerbTable(verb) {
   }
 
   if (document.getElementById(tableId(verb)) !== null) {
-    console.error(`Table ${tableId(verb)} already exists!`);
+    showError(`Table ${tableId(verb)} already exists!`);
     return null;
   }
 
@@ -285,6 +298,39 @@ function createVerbTable(group, stem) {
   if (table !== null) {
     mainContent.appendChild(table);
   }
+}
+
+function menuClick() {
+  const currentDisplay = window.getComputedStyle(menuBar).display;
+  if (currentDisplay === "flex") {
+    menuBar.style.display = "none";
+  } else {
+    menuBar.style.display = "flex";
+  }
+  closeErrorBox();
+}
+
+function newClick() {
+  const currentDisplay = window.getComputedStyle(newBar).display;
+  if (currentDisplay === "flex") {
+    newBar.style.display = "none";
+  } else {
+    newBar.style.display = "flex";
+  }
+  closeErrorBox();
+}
+
+function addClick() {
+  const group = newVerbGroup.value;
+  newVerbGroup.selectedIndex = 0;
+  const stem = newVerbStem.value;
+  newVerbStem.value = "";
+  createVerbTable(group, stem);
+  closeErrorBox();
+}
+
+function closeErrorBox() {
+  errorModal.style.display = "none";
 }
 
 createVerbTable("A1", "Κάν");
