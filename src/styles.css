@@ -1,5 +1,99 @@
+:root {
+  --main-background-color: rgb(31, 31, 31);
+  --secondary-background-color: rgb(18, 18, 18);
+  --interactable-background-color: rgb(7, 13, 141);
+  --interactable-hover-background-color: rgb(40, 50, 226);
+  --interactable-active-background-color: rgb(71, 80, 255);
+  --data-primary-color: rgb(50, 50, 50);
+  --data-secondary-color: rgb(70, 70, 70);
+  --main-foreground-color: rgb(179, 179, 179);
+}
+
 body {
-  background-color: rgb(31, 31, 31);
-  color: lightgray;
+  background-color:var(--main-background-color);
+  color: var(--main-foreground-color);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+header {
+  background-color: var(--secondary-background-color);
+  margin: 0px;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+footer {
+  background-color: var(--secondary-background-color);
+  margin: 0px;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 6px;
+  color: var(--main-foreground-color);
+  border: none;
+  border-radius: 8px;
+  background-color: var(--interactable-background-color);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--interactable-hover-background-color);
+}
+
+button:active {
+  background-color: var(--interactable-active-background-color);
+}
+
+.delete-button {
+  background-color: rgb(160, 0, 0);
+  width: 50%;
+}
+
+.delete-button:hover {
+  background-color: rgb(200, 0, 0);
+}
+
+.delete-button:active {
+  background-color: rgb(255, 0, 0);
+}
+
+table {
+  border: 2px solid var(--secondary-background-color);
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+thead {
+  background-color: var(--data-primary-color);
+}
+
+tbody {
+  background-color: var(--data-secondary-color);
+}
+
+th, td {
+  border: 2px solid var(--secondary-background-color);
+  padding: 4px;
+}
+
+th {
+  background-color: var(--data-primary-color);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 60%;
+  margin: 5px auto 5px auto;
 }
