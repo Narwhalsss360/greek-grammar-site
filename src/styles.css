@@ -122,6 +122,7 @@ th {
   flex-direction: column;
   max-width: 60%;
   margin: 5px auto 5px auto;
+  padding-bottom: 30px;
 }
 
 .sidebar {
