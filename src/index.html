@@ -35,11 +35,6 @@
 
     <div id="main-content" class="main-content"></div>
 
-    <div id="error-modal" class="error-modal" style="display: none;">
-      <p id="error-modal-p" style="align-self: center; margin: 12px;"></p>
-      <button onclick="closeErrorBox()" style="background-color: black;">Close</button>
-    </div>
-
     <div id="exceptions-modal" class="exceptions-modal" style="display: none;">
       <div style="display: flex; flex-direction: column; width: 75%; align-self: center;">
         <h4 id="exception-verb-id" style="align-self: center; margin: 10px 0px 6px 0px;">GROUP:STEM</h4>
@@ -58,6 +53,11 @@
         <button class="exceptions-modal-cancel-button" onclick="cancelException()">Cancel</button>
         <button class="exceptions-modal-save-button" onclick="saveException()">Save</button>
       </div>
+    </div>
+
+    <div id="error-modal" class="error-modal" style="display: none;">
+      <p id="error-modal-p" style="align-self: center; margin: 12px;">Error:</p>
+      <button onclick="closeErrorBox()" style="background-color: black;">Close</button>
     </div>
 
     <footer>

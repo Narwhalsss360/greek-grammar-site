@@ -319,7 +319,6 @@ function menuClick() {
   } else {
     menuBar.style.display = "flex";
   }
-  closeErrorBox();
 }
 
 function newClick() {
@@ -329,7 +328,6 @@ function newClick() {
   } else {
     newBar.style.display = "flex";
   }
-  closeErrorBox();
 }
 
 function addClick() {
@@ -338,7 +336,6 @@ function addClick() {
   const stem = newVerbStem.value;
   newVerbStem.value = "";
   createVerbTable(group, stem);
-  closeErrorBox();
 }
 
 function closeErrorBox() {
@@ -503,6 +500,13 @@ function saveException() {
 }
 
 function openException(id) {
+  if (exceptional !== null && exception.style.display !== "none") {
+    if (id === tableId(exceptional)) {
+      cancelException();
+      return;
+    }
+  }
+
   const [group, stem] = deconstructId(id);
   const index = getVerbIndex(group, stem);
   if (index === -1) {
