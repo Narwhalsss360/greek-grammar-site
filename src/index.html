@@ -6,7 +6,9 @@
   </head>
   <body>
     <script src="./index.js" defer></script>
-    <div id="menu-bar" class="sidebar" style="display: none;">
+    <div id="menu-bar" class="sidebar" style="display: flex;">
+      <label for="import-file" class="file-upload-label">Import</label>
+      <input type="file" id="import-file" style="padding: 4px;">
       <button onclick="exportVerbs()">Export</button>
     </div>
 
@@ -34,7 +36,7 @@
     <div id="main-content" class="main-content"></div>
 
     <div id="error-modal" class="error-modal" style="display: none;">
-      <p id="error-modal-p" style="align-self: center;"></p>
+      <p id="error-modal-p" style="align-self: center; margin: 12px;"></p>
       <button onclick="closeErrorBox()" style="background-color: black;">Close</button>
     </div>
 

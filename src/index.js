@@ -6,6 +6,7 @@ const newVerbGroup = document.getElementById("new-verb-group");
 const newVerbStem = document.getElementById("new-verb-stem");
 const errorModal = document.getElementById("error-modal");
 const errorModalParagraph = document.getElementById("error-modal-p");
+const importInput = document.getElementById("import-file");
 
 const ENDINGS = {
   A1: {
@@ -350,6 +351,114 @@ function downloadText(filename, text, mimeType = "text/plain") {
 function exportVerbs() {
   downloadText("verbs.json", JSON.stringify(verbs, null, 2), "application/json");
 }
+
+function validateImportedVerbs(imported) {
+  if (!Array.isArray(imported)) {
+    showError("JSON schema error: Verbs must be an array of objects.");
+    return false;
+  }
+
+  const ensureKey = (name, obj, key, type) => {
+      if (key in obj) {
+        return true;
+      }
+
+      if (typeof obj[key] === type) {
+        return true;
+      }
+
+      showError(`JSON schema error: Verbs must be an array of objects, where each '${name}' has key '${key}' of type ${type}.`);
+      return false;
+  }
+
+  for (const verb of imported) {
+    if (typeof verb !== "object") {
+      showError("JSON schema error: Verbs must be an array of objects.");
+      return false;
+    }
+
+    if (!ensureKey("verb", verb, "group", "string")) {
+      return false;
+    }
+
+    if (!ensureKey("verb", verb, "stem", "string")) {
+      return false;
+    }
+
+    if (!(verb.group in ENDINGS)) {
+      showError(`JSON schema error: verb.group $'${verb.group}' is an invalid group for verb '${verb.stem}'.`)
+      return false;
+    }
+
+    if (!ensureKey("verb", verb, "singular", "object")) {
+      return false;
+    }
+    if (!ensureKey("verb.singular", verb.singular, "first", "string")) {
+      return false;
+    }
+    if (!ensureKey("verb.singular", verb.singular, "second", "string")) {
+      return false;
+    }
+    if (!ensureKey("verb.singular", verb.singular, "third", "string")) {
+      return false;
+    }
+
+    if (!ensureKey("verb", verb, "plural", "object")) {
+      return false;
+    }
+    if (!ensureKey("verb.plural", verb.plural, "first", "string")) {
+      return false;
+    }
+    if (!ensureKey("verb.plural", verb.plural, "second", "string")) {
+      return false;
+    }
+    if (!ensureKey("verb.plural", verb.plural, "third", "string")) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+importInput.addEventListener("input", () => {
+  if (importInput.files.length === 0) {
+    return;
+  }
+  const file = importInput.files[0];
+
+  if (file.type !== "application/json") {
+    showError("Imported file must be a json file.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    let verbs;
+    try {
+      verbs = JSON.parse(e.target.result);
+    } catch (exc) {
+      showError(`An error occurred parsing JSON file: ${exc.message}`);
+    }
+
+    if (!validateImportedVerbs(verbs)) {
+      return;
+    }
+
+    console.log("Imported:");
+    console.log(verbs);
+
+    for (const verb of verbs) {
+      const table = generateVerbTable(verb);
+      if (table === null) {
+        console.warn(`Imported verb ${tableId(verb)} already exists!`);
+        continue;
+      }
+      persistVerb(verb);
+      mainContent.appendChild(table);
+    }
+  }
+  reader.readAsText(file);
+});
 
 for (const verb of verbs) {
   const table = generateVerbTable(verb);

@@ -156,3 +156,19 @@ th {
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 }
+
+input[type="file"] {
+  display: none;
+}
+
+.file-upload-label {
+  padding: 6px;
+  color: var(--main-foreground-color);
+  border: none;
+  border-radius: 8px;
+  background-color: var(--interactable-background-color);
+  transition: background-color 0.2s;
+  cursor: pointer;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
