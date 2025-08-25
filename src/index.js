@@ -7,6 +7,11 @@ const newVerbStem = document.getElementById("new-verb-stem");
 const errorModal = document.getElementById("error-modal");
 const errorModalParagraph = document.getElementById("error-modal-p");
 const importInput = document.getElementById("import-file");
+const exception = document.getElementById("exceptions-modal");
+const exceptionVerbId = document.getElementById("exception-verb-id");
+const exceptionGrammaticalFormSelect = document.getElementById("exception-grammatical-form-select");
+const exceptionGrammaticalCount = document.getElementById("exception-grammatical-count-select");
+const exceptionInput = document.getElementById("exception-input");
 
 const ENDINGS = {
   A1: {
@@ -204,15 +209,17 @@ function forgetVerb(group, stem) {
   return true;
 }
 
-function deleteTable(id) {
-  closeErrorBox();
+function deconstructId(id) {
   const separatorIndex = id.indexOf(":");
   if (separatorIndex === -1) {
     throw new Error("Invalid ID.");
   }
 
-  const group = id.substring(0, separatorIndex);
-  const stem = id.substring(separatorIndex + 1);
+  return [id.substring(0, separatorIndex), id.substring(separatorIndex + 1)];
+}
+
+function deleteTable(id) {
+  const [group, stem] = deconstructId(id);
 
   if (!forgetVerb(group, stem)) {
     showError(`Verb '${id}' was not persisted, but tried to forget.`);
@@ -227,8 +234,8 @@ function deleteTable(id) {
   mainContent.removeChild(table);
 }
 
-function generateVerbTable(verb) {
-  if (document.getElementById(tableId(verb)) !== null) {
+function generateVerbTable(verb, allowDuplicate = false) {
+  if (document.getElementById(tableId(verb)) !== null && !allowDuplicate) {
     return null;
   }
 
@@ -259,6 +266,7 @@ function generateVerbTable(verb) {
     <tfoot>
       <tr>
         <th scope="row" colspan="4">
+          <button class="exceptions-button" onclick="openException('${table.id}')">Exceptions</button>
           <button class="delete-button" onclick="deleteTable('${table.id}')">Delete</button>
         </th>
       </tr>
@@ -450,7 +458,7 @@ importInput.addEventListener("input", () => {
     for (const verb of verbs) {
       const table = generateVerbTable(verb);
       if (table === null) {
-        console.warn(`Imported verb ${tableId(verb)} already exists!`);
+        console.warn(`Imported verb ${tableId(verb)} already exists! To import exceptions, delete this verb.`);
         continue;
       }
       persistVerb(verb);
@@ -458,6 +466,67 @@ importInput.addEventListener("input", () => {
     }
   }
   reader.readAsText(file);
+});
+
+let exceptional = null;
+
+function cancelException() {
+  exceptional = null;
+  exception.style.display = "none";
+}
+
+function saveException() {
+  if (exceptional === null) {
+    return;
+  }
+
+  exceptional[exceptionGrammaticalFormSelect.value][exceptionGrammaticalCount.value] = exceptionInput.value;
+  const [group, stem] = deconstructId(tableId(exceptional));
+  const index = getVerbIndex(group, stem);
+  if (index === -1) {
+    showError(`FATAL: Script error: Cannot open exception modal for ${id}, verb not found.`);
+    return;
+  }
+
+  const existingTable = document.getElementById(tableId(exceptional));
+  if (existingTable === null) {
+    showError(`Verb ${tableId(exceptional)} was deleted while editing exceptions.`);
+    return;
+  }
+
+  verbs[index] = exceptional;
+  forgetVerb(group, stem);
+  persistVerb(exceptional);
+  const table = generateVerbTable(exceptional, true);
+  existingTable.innerHTML = table.innerHTML;
+  cancelException();
+}
+
+function openException(id) {
+  const [group, stem] = deconstructId(id);
+  const index = getVerbIndex(group, stem);
+  if (index === -1) {
+    showError(`FATAL: Script error: Cannot open exception modal for ${id}, verb not found.`);
+    return;
+  }
+  exceptional = structuredClone(verbs[index]);
+  const change = new Event("change");
+  exceptionVerbId.innerText = id;
+  exceptionGrammaticalFormSelect.dispatchEvent(change);
+  exceptionGrammaticalCount.dispatchEvent(change);
+  exception.style.display = "flex";
+}
+
+exceptionGrammaticalFormSelect.addEventListener("change", () => {
+  if (exceptional !== null) {
+    exceptionInput.value = exceptional[exceptionGrammaticalFormSelect.value][exceptionGrammaticalCount.value];
+  }
+});
+
+exceptionGrammaticalCount.addEventListener("change", () => {
+  if (exceptional !== null) {
+    exceptionInput.value = exceptional[exceptionGrammaticalFormSelect.value][exceptionGrammaticalCount.value];
+  }
 });
 
 for (const verb of verbs) {

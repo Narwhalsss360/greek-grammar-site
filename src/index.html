@@ -40,6 +40,26 @@
       <button onclick="closeErrorBox()" style="background-color: black;">Close</button>
     </div>
 
+    <div id="exceptions-modal" class="exceptions-modal" style="display: none;">
+      <div style="display: flex; flex-direction: column; width: 75%; align-self: center;">
+        <h4 id="exception-verb-id" style="align-self: center; margin: 10px 0px 6px 0px;">GROUP:STEM</h4>
+        <select id="exception-grammatical-form-select" style="margin: 0px 0px 6px 0px;">
+          <option value="singular">Singluar</option>
+          <option value="plural">Plural</option>
+        </select>
+        <select id="exception-grammatical-count-select" style="margin: 0px 0px 6px 0px;">
+          <option value="first">1st Person</option>
+          <option value="second">2nd Person</option>
+          <option value="third">3rd Person</option>
+        </select>
+        <input id="exception-input" style="margin: 0px 0px 10px 0px" type="text" placeholder="Enter Exception">
+      </div>
+      <div style="display: flex;">
+        <button class="exceptions-modal-cancel-button" onclick="cancelException()">Cancel</button>
+        <button class="exceptions-modal-save-button" onclick="saveException()">Save</button>
+      </div>
+    </div>
+
     <footer>
       <div></div>
       <h3 style="margin: 0px 5px 0px 5px; justify-self: center;">Author: Franklyn Vasquez</h3>

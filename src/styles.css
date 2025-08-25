@@ -77,9 +77,13 @@ button:active {
   background-color: var(--interactable-active-background-color);
 }
 
+.exceptions-button {
+  width: 49.5%;
+}
+
 .delete-button {
   background-color: rgb(160, 0, 0);
-  width: 50%;
+  width: 49.5%;
 }
 
 .delete-button:hover {
@@ -127,7 +131,6 @@ th {
   position: fixed;
   top: 0px;
   left: 0px;
-  height: 100%;
   max-width: 80%;
   background-color: var(--secondary-background-color);
 }
@@ -171,4 +174,34 @@ input[type="file"] {
   cursor: pointer;
   margin-bottom: 6px;
   font-size: 13px;
+}
+
+.exceptions-modal {
+  position: static;
+  top: 10%;
+  margin: 0px auto 0px auto;
+  background-color: var(--secondary-background-color);
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-width: 50%;
+  border-radius: 20px;
+  align-content: center;
+}
+
+.exceptions-modal-cancel-button {
+  border-radius: 0px;
+  border-bottom-left-radius: 20px;
+  width: 50%;
+}
+
+.exceptions-modal-cancel-button:hover {
+  background-color: rgb(130, 0, 0);
+}
+
+.exceptions-modal-save-button {
+  border-radius: 0px;
+  border-bottom-right-radius: 20px;
+  width: 50%;
 }
