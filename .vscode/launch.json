@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "name": "dev-launch",
+            "request": "launch",
+            "url": "http://localhost:5500/src/index.html"
+        },
+        {
+            "type": "chrome",
+            "name": "deploy-launch",
+            "request": "launch",
+            "url": "http://localhost:5500/index.html"
+        }
+    ]
+}

@@ -331,6 +331,10 @@ function newClick() {
 }
 
 function addClick() {
+  if (newVerbStem.value === "") {
+    return;
+  }
+
   const group = newVerbGroup.value;
   newVerbGroup.selectedIndex = 0;
   const stem = newVerbStem.value;
